@@ -1,0 +1,167 @@
+# Questions:
+# 1. What statistics most closely correlate to playoff success? Are any of these stats overlooked in the mainstream sports analysis? Ideas: points, # of all-stars, assists, TOs (negative)
+# 2. Are there any stats that predict poor playoff performance / not making the playoffs, besides TOs?
+# 3. Can the stats be combined (ex: Assist / TO ratio) to create a more predictive dataset? Ideas: Ast:TO, 2-ptFG:3-ptFG
+# 4. Did the bubble (2020 season) affect how stats predict playoff success? Lots of different variables.
+# 5. Any common statistics among the champions of each year?
+
+# import packages
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# import dataset and create dataframe
+from google.colab import files 
+uploaded = files.upload()
+stats = pd.read_csv('EDAP dataset.csv')
+frame = pd.DataFrame(stats)
+print(frame)
+
+# create slices by year, add AST/TO column
+frame['AST/TO'] = frame['AST'] / frame['TO']
+frame2020 = pd.DataFrame(frame[frame["YEAR"] == 2020])
+frame2019 = pd.DataFrame(frame[frame["YEAR"] == 2019])
+frame2018 = pd.DataFrame(frame[frame["YEAR"] == 2018])
+
+# slice 2018 data, create subplots for each of the four stat categories
+fig = plt.figure(figsize=(20,10))
+fig.suptitle('2018 Playoff Statistics', fontsize=25)
+
+plt.subplot(2,2,1)
+frame2018PTS = frame2018.sort_values(by=['PTS'], ascending=False)
+Frame2018PTS = frame2018PTS.head(8)
+clrs_20181 = ['black' if x == 'GS18'  else 'red' for x in Frame2018PTS['TEAM/YEAR'] ]  # changes color of the bar of championship winner
+plt.bar(Frame2018PTS['TEAM/YEAR'], Frame2018PTS['PTS'], label='Points per game', color= clrs_20181)
+plt.title('Points per game')
+plt.ylim([100, 112])
+
+plt.subplot(2,2,2)
+frame2018OR = frame2018.sort_values(by=['OR'], ascending=False)
+Frame2018OR = frame2018OR.head(8)
+clrs_20182 = ['black' if x == 'GS18' else 'green' for x in Frame2018OR['TEAM/YEAR']]
+plt.bar(Frame2018OR['TEAM/YEAR'], Frame2018OR['OR'], label='Offensive rebounds per game', color=clrs_20182)
+plt.title('Offensive Rebounds per game')
+plt.ylim([8, 14])
+
+plt.subplot(2,2,3)
+frame2018ASTTO = frame2018.sort_values(by=['AST/TO'], ascending=False)
+Frame2018ASTTO = frame2018ASTTO.head(8)
+clrs_20183 = ['black' if x == 'GS18' else 'yellow' for x in Frame2018ASTTO['TEAM/YEAR']]
+plt.bar(Frame2018ASTTO['TEAM/YEAR'], Frame2018ASTTO['AST/TO'], label='Assist/Turnover ratio per game', color=clrs_20183)
+plt.title('Assist/Turnover Ratio per game')
+plt.ylim([1.6, 2.1])
+
+plt.subplot(2,2,4)
+frame2018FGPercent = frame2018.sort_values(by=['FG%'], ascending=False)
+Frame2018FGPercent = frame2018FGPercent.head(8)
+clrs_20184 = ['black' if x == 'GS18' else 'blue' for x in Frame2018FGPercent['TEAM/YEAR']]
+plt.bar(Frame2018FGPercent['TEAM/YEAR'], Frame2018FGPercent['FG%'], label='Field goal % per game', color=clrs_20184)
+plt.title('Field Goal Percentage per game')
+plt.ylim([44, 50])
+
+plt.show()
+
+# slice 2019 data, create subplots
+fig = plt.figure(figsize=(20, 10))
+fig.suptitle('2019 Playoff Statistics', fontsize=25)
+
+plt.subplot(2,2,1)
+frame2019PTS = frame2019.sort_values(by=['PTS'], ascending=False)
+Frame2019PTS = frame2019PTS.head(8)
+clrs_20191 = ['black' if x == 'TOR19' else 'red' for x in Frame2019PTS['TEAM/YEAR']]
+plt.bar(Frame2019PTS['TEAM/YEAR'], Frame2019PTS['PTS'], label='Points per game', color= clrs_20191)
+plt.title('Points per game')
+plt.ylim([105, 115])
+
+plt.subplot(2,2,2)
+frame2019OR = frame2019.sort_values(by=['OR'], ascending=False)
+Frame2019OR = frame2019OR.head(8)
+plt.bar(Frame2019OR['TEAM/YEAR'], Frame2019OR['OR'], label='Offensive rebounds per game', color='g')
+plt.title('Offensive Rebounds per game')
+plt.ylim([8, 14])
+
+plt.subplot(2,2,3)
+frame2019ASTTO = frame2019.sort_values(by=['AST/TO'], ascending=False)
+Frame2019ASTTO = frame2019ASTTO.head(8)
+clrs_20193 = ['black' if x == 'TOR19' else 'yellow' for x in Frame2019ASTTO['TEAM/YEAR']]
+plt.bar(Frame2019ASTTO['TEAM/YEAR'], Frame2019ASTTO['AST/TO'], label='Assist/Turnover ratio per game', color= clrs_20193)
+plt.title('Assist/Turnover Ratio per game')
+plt.ylim([1, 2.6])
+
+plt.subplot(2,2,4)
+frame2019FGPercent = frame2019.sort_values(by=['FG%'], ascending=False)
+Frame2019FGPercent = frame2019FGPercent.head(8)
+clrs_20194 = ['black' if x == 'TOR19' else 'blue' for x in Frame2019FGPercent['TEAM/YEAR']]
+plt.bar(Frame2019FGPercent['TEAM/YEAR'], Frame2019FGPercent['FG%'], label='Field goal % per game', color= clrs_20194)
+plt.title('Field Goal Percentage per game')
+plt.ylim([40, 48])
+
+plt.show()
+
+# slice 2020 data
+fig = plt.figure(figsize=(20, 10))
+fig.suptitle('2020 Playoff Statistics', fontsize=25)
+
+plt.subplot(2, 2, 1) # 1 row, 2 cols, chart 1
+clrs_20201 = ['black' if x == 'LAL20' else 'red' for x in Frame2020PTS['TEAM/YEAR']]
+plt.bar(Frame2020PTS['TEAM/YEAR'], Frame2020PTS['PTS'], label='Points per game', color= clrs_20201)
+plt.title('Points per game')
+plt.ylim([100, 120])
+
+plt.subplot(2, 2, 2) # 1 row, 2 cols, chart 2
+clrs_20202 = ['black' if x == 'LAL20' else 'green' for x in Frame2020OR['TEAM/YEAR']]
+plt.bar(Frame2020OR['TEAM/YEAR'], Frame2020OR['OR'], label='Offensive rebounds per game', color= clrs_20202)
+plt.title('Offensive Rebounds per game')
+plt.ylim([8, 13])
+
+plt.subplot(2,2,3)
+clrs_20203 = ['black' if x == 'LAL20' else 'yellow' for x in Frame2020ASTTO['TEAM/YEAR']]
+plt.bar(Frame2020ASTTO['TEAM/YEAR'], Frame2020ASTTO['AST/TO'], label='Assist/Turnover ratio per game', color= clrs_20203)
+plt.title('Assist/Turnover ratio per game')
+plt.ylim([1.5, 2])
+
+plt.subplot(2, 2, 4)
+clrs_20204 = ['black' if x == 'LAL20' else 'blue' for x in Frame2020FGPercent['TEAM/YEAR']]
+plt.bar(Frame2020FGPercent['TEAM/YEAR'], Frame2020FGPercent['FG%'], label='Field goal % per game', color= clrs_20204)
+plt.title('Field goal percentage per game')
+plt.ylim([44, 50])
+
+plt.show()
+
+# compare championship teams from each year
+champFrame = frame[frame['Championship'] == True]
+print(champFrame)
+
+# plot different stats and compare 2020 (bubble) season to others
+# create subplots for each stat category (PTS, OR, AST/TO, FG%)
+fig = plt.figure(figsize=(20, 10))
+fig.suptitle('Finals Champions Playoff Statistics', fontsize=25)
+
+plt.subplot(2,2,1)
+plt.title('Points per Playoff Game', fontsize=15)
+plt.plot(champFrame['YEAR'], champFrame['PTS'], label='Points per game', color = 'r', marker = 'o')
+plt.xlabel('Year')
+plt.ylabel('Points')
+plt.locator_params(axis='x', nbins=3)
+
+plt.subplot(2,2,2)
+plt.title('Offensive Rebounds per Playoff Game', size=15)
+plt.plot(champFrame['YEAR'], champFrame['OR'], label='Offensive boards per game', color = 'g', marker = 'o')
+plt.xlabel('Year')
+plt.ylabel('Offensive Rebounds')
+plt.locator_params(axis='x', nbins=3)
+
+plt.subplot(2,2,3)
+plt.title('Assist/TO Ratio per Playoff Game', size=15)
+plt.plot(champFrame['YEAR'], champFrame['AST/TO'], label='Assist/Turnover ratio per game', color = 'y', marker = 'o')
+plt.xlabel('Year')
+plt.ylabel('Assist/TO Ratio')
+plt.locator_params(axis='x', nbins=3)
+
+plt.subplot(2,2,4)
+plt.title('Field Goal Percentage per Playoff Game', size=15)
+plt.plot(champFrame['YEAR'], champFrame['FG%'], label='Field goal % per game', color = 'b', marker = 'o')
+plt.xlabel('Year')
+plt.ylabel('Field Goal Percentage')
+plt.locator_params(axis='x', nbins=3)
+plt.show()
